@@ -1,0 +1,65 @@
+<form [formGroup]="rForm" (ngSubmit)="addPost(rForm.value)">
+  <md-card>
+    <md-card-header>
+      <md-card-title><h4>Add New Book</h4></md-card-title>
+      <img md-card-avatar src="assets/img/pencil.png" />
+    </md-card-header>
+    <!-- Shows the reactive form controls in the modal -->
+    <div *ngIf="rForm.value">
+        <p>Form value: {{ rForm.value | json }}</p>
+        <p>Form status: {{ rForm.status | json }}</p>
+        <p>Form pristine: {{ rForm.pristine | json }}</p>
+        <p>Form untouched: {{ rForm.untouched | json }}</p>
+        <p>Title: {{ rForm.controls['title']?.errors | json }}</p>
+        <p>Author: {{ rForm.controls['author'].errors | json }}</p>
+        <p>Rating: {{ rForm.controls['rating'].errors | json }}</p>
+    </div>
+    <md-card-content>
+      <md-input-container>
+        <label>Title 
+        <div *ngIf="!rForm.controls['title'].valid && (rForm.controls['title'].dirty || rForm.controls['title'].touched)">
+          <span class="chip chip-danger" *ngIf="rForm.controls['title'].errors.minlength">
+            {{ newBookConstants.titleErrorMinLength }}
+          </span>
+          <span class="chip chip-danger" *ngIf="rForm.controls['title'].errors?.required">
+            {{ newBookConstants.titleErrorRequired }}
+          </span>
+        </div>
+        <input mdInput formControlName="title" class="form-control" required/>
+        </label>
+      </md-input-container>
+      <md-input-container>
+        <label>Author 
+          <div *ngIf="!rForm.controls['author'].valid && (rForm.controls['author'].dirty || rForm.controls['author'].touched)">
+              <span class="chip chip-danger" *ngIf="rForm.controls['author'].errors.minlength">
+                {{ newBookConstants.authorErrorMinLength }}
+              </span>
+              <span class="chip chip-danger" *ngIf="rForm.controls['author'].errors?.required">
+                {{ newBookConstants.authorErrorRequired }}
+              </span>
+          </div>
+          <span class="chip chip-danger" *ngIf="rForm.controls['author'].valid && rForm.controls['author'].value.indexOf(' ') == -1">
+            {{ newBookConstants.authorErrorFullName }}
+          </span>
+          <input mdInput formControlName="author"/>
+        </label>
+      </md-input-container>
+      <p class="rating-label">Rating </p>
+      <div *ngIf="!rForm.controls['title'].valid && (rForm.controls['title'].dirty || rForm.controls['title'].touched)">
+        <span class="chip chip-danger" *ngIf="rForm.controls['title'].errors?.required">
+          {{ newBookConstants.ratingErrorRequired }}
+        </span>
+      </div>
+      <my-rating [book]="book" (ratingClicked)="onRatingClicked($event)">
+      </my-rating>
+      <md-slide-toggle color="primary" formControlName="isCheckedOut" name="checkedOut">Checked out?</md-slide-toggle>
+    </md-card-content>
+    <md-card-actions>
+      <div class="text-right">
+        <button type="submit " md-button (click)="save()" color="warn" [disabled]="!rForm.valid"><i class="material-icons">save</i>SAVE</button>
+        <button type="reset" md-button (click)="cancel()"><i class="material-icons">cancel</i>CANCEL</button>
+      </div>
+    </md-card-actions>
+  </md-card>
+</form>
+
